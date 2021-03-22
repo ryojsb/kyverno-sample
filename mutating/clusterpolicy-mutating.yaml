@@ -1,0 +1,22 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: set-vault-annotations
+spec:
+  rules:
+    - name: set-vault-annotations
+      match:
+        resources:
+          kinds:
+          - Pod
+      mutate:
+        overlay:
+          metadata:
+            (labels):
+              vault-injection: "true"
+            annotations:
+              vault.hashicorp.com/agent-inject: "true"
+              vault.hashicorp.com/role: "vmware"
+              vault.hashicorp.com/agent-inject-secret-vmware-devops-secret.txt: "vmware/data/devops/8"
+          spec:
+            serviceAccountName: vmware
